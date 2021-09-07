@@ -15,11 +15,16 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.0
 Imports: 
+    datasets,
     dplyr,
+    ggplot2,
+    jsonlite,
     learnr,
     learnrhash,
-    nycflights13
-Depends: 
-    tidyverse
+    nycflights13,
+    purrr,
+    readr,
+    tidyr,
+    WDI
 Remotes:
     rundel/learnrhash
