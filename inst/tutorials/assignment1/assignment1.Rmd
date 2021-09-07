@@ -8,10 +8,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 require(learnr)
-require(gradethis)
 tutorial_options(exercise.reveal_solution = FALSE)
-gradethis_setup(pass = NULL,
-                fail = NULL)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
