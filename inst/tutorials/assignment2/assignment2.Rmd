@@ -10,21 +10,32 @@ runtime: shiny_prerendered
 require(tidyverse)
 require(learnr)
 tutorial_options(exercise.reveal_solution = FALSE)
-gradethis_setup(pass = NULL,
-                fail = NULL)
 knitr::opts_chunk$set(echo = FALSE)
+
+watermark <- function (x, y) {
+  annotate("text",
+           x = x, y = y,
+           label = "FOR COMPARISON!",
+           size = rel(10),
+           color = "firebrick",
+           angle = -45,
+           alpha = 0.8)
+}
 ```
 
-This homework involves plotting and data manipulation. It requires the use of two new datasets, starwars and flights which live in the dplyr and nycflights13 packages respectively.
+This homework assignment asks you to practice **plotting and data manipulation.** It requires the use of two new datasets, `starwars` and `flights`, which live in the `dplyr` and `nycflights13` packages respectively.
+
+We have already pre-loaded the packages for you, so you will not need to `library()` them, but you will still need to use correct syntax to access the `starwars` and `flights` dataframes.
 
 ## Question 1
 
-Load the starwars dataset from the dplyr package. Create a scatter plot of characters' heights (x-axis) against their masses (y-axis), with axis labels and graph title as shown on the solution graph. (Please copy the axis labels and title verbatim.)
+Create a scatter plot of `starwars` characters' heights (x-axis) against their masses (y-axis), with axis labels and graph title as shown on the solution graph. (Please copy the axis labels and title verbatim.)
 
 ```{r, warning = FALSE}
 dplyr::starwars %>% 
   ggplot(aes(x = height, y = mass)) +
   geom_point() +
+  watermark(175, 750) +
   labs(x = "Character height (cm)",
        y = "Character mass (kg)",
        title = "Scatterplot of Star Wars characters' mass by height")
@@ -42,6 +53,7 @@ Create a histogram of birth year of `starwars` characters' _negative_ birth year
 dplyr::starwars %>% 
   ggplot(aes(x = -birth_year)) +
   geom_histogram() +
+  watermark(-400, 7) +
   labs(x = "Character birth year (years before Episode)",
        y = "# of characters",
        title = "Yoda is the outlier on this histogram")
@@ -60,7 +72,10 @@ dplyr::starwars %>%
   ggplot(aes(x = height)) +
   geom_density(fill = "skyblue") +
   facet_wrap(~gender, scales = "free_y") +
-  labs(x = "Character height (cm)", y = "Density (Probability units)") +
+  labs(x = "Character height (cm)",
+       y = "Density (Probability units)",
+       title = "FOR COMPARISON!",
+       subtitle = "(You can omit this title from your graph)") +
   theme_bw()
 ```
 
@@ -77,21 +92,24 @@ dplyr::starwars %>%
   filter(species %in% c("Human", "Droid", "Wookiee")) %>% 
   ggplot(aes(x = species, y = height)) +
   geom_violin() +
+  watermark(2, 160) +
   labs(x = "Character species",
        y = "Character height (cm)",
        title = "Violin plots of Star Wars character heights from 3 species") +
   ggthemes::theme_economist()
 ```
 
-```{r q3, exercise = TRUE}
+```{r q4, exercise = TRUE}
 
 ```
 
 ## Question 5
 
-In the `flights` dataset in the `nycflights13` package:
+These questions will use the `flights` dataset. In each exercise, you will need to fill the marked blanks with code. You will not need to add functions outside of those that are already marked with placeholders for you, but you may sometimes need to put multiple statements inside one set of function parentheses.
 
 Read Chapter 12 if you are uncertain about these functions.
+
+Each exercise comes with solution output that you can inspect, but the code is hidden so you can write yours on your own. Your code's output should look identical to the solution output, so you can check your work before you finish.
 
 ```{r flights-setup}
 require(nycflights13)
@@ -100,7 +118,7 @@ require(nycflights13)
 
 ### Part 1
 
-Use the `contains` function to select columns from the `flights` dataset that contain the word "dep".
+Use the `contains()` function to select columns from the `flights` dataset that contain the word "dep".
 
 ```{r}
 nycflights13::flights %>% 
@@ -114,7 +132,7 @@ flights %>%
 
 ### Part 2
 
-Use starts_with to select columns that start with the letter "s". 
+Use `starts_with()` to select columns that start with the letter "s". 
 
 ```{r}
 nycflights13::flights %>% 
@@ -172,6 +190,16 @@ nycflights13::flights %>%
 ```{r q8, exercise = TRUE, exercise.setup = "flights-setup"}
 flights %>%
   ___(speed = ___) %>% 
-  ___() %>% 
+  ___(___) %>% 
   ___(avg_speed = ___)
+```
+
+## Submit
+
+```{r context="server"}
+learnrhash::encoder_logic(strip_output = TRUE)
+```
+
+```{r encode}
+learnrhash::encoder_ui(ui_before = learnrhash::default_ui(url = "https://courseworks2.columbia.edu/courses/140180/assignments/673024"))
 ```
