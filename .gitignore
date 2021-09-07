@@ -37,3 +37,12 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# renv user-specific stuff
+renv/*
+
+# incidental tutorial testing stuff
+inst/tutorials/*/*.html
+
+# The enemy of Macs
+*.DS_Store
