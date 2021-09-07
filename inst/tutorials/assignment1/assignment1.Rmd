@@ -118,5 +118,5 @@ learnrhash::encoder_logic()
 ```
 
 ```{r encode}
-learnrhash::encoder_ui()
+learnrhash::encoder_ui(ui_before = learnrhash::default_ui(url = "https://courseworks2.columbia.edu/courses/140180/assignments/673020"))
 ```
