@@ -1,0 +1,122 @@
+---
+title: "Tutorial"
+output:
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+require(learnr)
+require(gradethis)
+tutorial_options(exercise.reveal_solution = FALSE)
+gradethis_setup(pass = NULL,
+                fail = NULL)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+Questions 1 and 3 are based on material not covered in class, but rather require reading Chapters 4 and 8 in R for Everyone.
+
+## Question 1
+
+### Part 1
+
+```{r q1-1}
+question_checkbox(
+  text = "What are the four main data types in R? Choose all four that apply.",
+  answer("numeric", T),
+  answer("integer"),
+  answer("complex"),
+  answer("character", T),
+  answer("date", T),
+  answer("logical", T),
+  answer("vector"),
+  answer("dataframe"),
+  answer("table"),
+  answer("tibble"),
+  random_answer_order = TRUE
+)
+```
+
+```{r q1-setup}
+mysteryVar <- "27"
+```
+
+### Part 2
+
+Replace the underscore blanks below with the correct function to determine whether or not the variable `mysteryVar` is **logical**. Your code should output `TRUE` or `FALSE`.
+
+```{r q1-2a, exercise = TRUE, exercise.setup = "q1-setup"}
+___(mysteryVar)
+```
+
+```{r q1-2a-solution}
+is.logical(mysteryVar)
+```
+
+Replace the underscore blanks below with the correct function to determine whether or not the variable `mysteryVar` is **numeric**. Your code should output `TRUE` or `FALSE`.
+
+```{r q1-2b, exercise = TRUE, exercise.setup = "q1-setup"}
+___(mysteryVar)
+```
+
+```{r q1-2b-solution}
+is.numeric(mysteryVar)
+```
+
+Replace the underscore blanks below with the correct function to determine whether or not the variable `mysteryVar` is **character**. Your code should output `TRUE` or `FALSE`.
+
+```{r q1-2c, exercise = TRUE, exercise.setup = "q1-setup"}
+___(mysteryVar)
+```
+
+```{r q1-2c-solution}
+is.character(mysteryVar)
+```
+
+Replace the underscore blanks below with the correct function to output the type of the variable `mysteryVar`. Your code should output a character string describing the type of the variable. This answer should be consistent with the answers you got for the previous questions.
+
+```{r q1-2d, exercise = TRUE, exercise.setup = "q1-setup"}
+___(mysteryVar)
+```
+
+```{r q1-2d-solution}
+class(mysteryVar)
+```
+
+## Question 2
+
+Create a vector of numbers from one to ten called `numVec`. Use the sum function to calculate the sum of this vector.
+
+```{r q2, exercise = TRUE}
+numVec <- ___
+
+```
+
+## Question 3
+
+Write a function that has two arguments. If the first argument is greater than or equal to the second argument, return the sum of the numbers. If the second argument is greater than the first argument, return the product of the numbers.
+
+```{r q3, exercise = TRUE}
+thisFunction <- function () {
+  
+}
+
+# Do not edit these lines below #
+# These are to help you check that your function works as intended #
+# Make sure the 3 outputs look like what you expect when you run the exercise code! #
+thisFunction(10, 20)
+thisFunction(20, 20)
+thisFunction(10, 10)
+```
+
+## Submit
+
+```{r context="server"}
+learnrhash::encoder_logic()
+```
+
+```{r encode}
+learnrhash::encoder_ui()
+```

@@ -1,0 +1,177 @@
+---
+title: "Tutorial"
+output:
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+require(tidyverse)
+require(learnr)
+tutorial_options(exercise.reveal_solution = FALSE)
+gradethis_setup(pass = NULL,
+                fail = NULL)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+This homework involves plotting and data manipulation. It requires the use of two new datasets, starwars and flights which live in the dplyr and nycflights13 packages respectively.
+
+## Question 1
+
+Load the starwars dataset from the dplyr package. Create a scatter plot of characters' heights (x-axis) against their masses (y-axis), with axis labels and graph title as shown on the solution graph. (Please copy the axis labels and title verbatim.)
+
+```{r, warning = FALSE}
+dplyr::starwars %>% 
+  ggplot(aes(x = height, y = mass)) +
+  geom_point() +
+  labs(x = "Character height (cm)",
+       y = "Character mass (kg)",
+       title = "Scatterplot of Star Wars characters' mass by height")
+```
+
+```{r q1, exercise = TRUE}
+
+```
+
+## Question 2
+
+Create a histogram of birth year of `starwars` characters' _negative_ birth year. The units are in years before Episode 4, so you must flip the sign to plot the histogram so that the oldest characters' birth years will appear on the left. Include axis labels and graph title as shown on the solution graph. (Again, please copy the axis labels and title verbatim.)
+
+```{r}
+dplyr::starwars %>% 
+  ggplot(aes(x = -birth_year)) +
+  geom_histogram() +
+  labs(x = "Character birth year (years before Episode)",
+       y = "# of characters",
+       title = "Yoda is the outlier on this histogram")
+```
+
+```{r q2, exercise = TRUE}
+
+```
+
+## Question 3
+
+Create density plots of Star Wars characters' heights, faceted by character gender. Change the fill in every density subplot to the color "skyblue". Use the theme `theme_bw()`. Set the y-axis scale on each subplot to vary freely. Label the x-axis and y-axis as shown in the solution graph.
+
+```{r}
+dplyr::starwars %>% 
+  ggplot(aes(x = height)) +
+  geom_density(fill = "skyblue") +
+  facet_wrap(~gender, scales = "free_y") +
+  labs(x = "Character height (cm)", y = "Density (Probability units)") +
+  theme_bw()
+```
+
+```{r q3, exercise = TRUE}
+
+```
+
+## Question 4
+
+Filter the Star Wars data for only characters of species type "Human", "Droid", or "Wookiee". Then, create a violin plot of characters' heights by species. Use the Economist theme in the `ggthemes` package. Label the x-axis, y-axis, and title as shown in the solution graph.
+
+```{r}
+dplyr::starwars %>% 
+  filter(species %in% c("Human", "Droid", "Wookiee")) %>% 
+  ggplot(aes(x = species, y = height)) +
+  geom_violin() +
+  labs(x = "Character species",
+       y = "Character height (cm)",
+       title = "Violin plots of Star Wars character heights from 3 species") +
+  ggthemes::theme_economist()
+```
+
+```{r q3, exercise = TRUE}
+
+```
+
+## Question 5
+
+In the `flights` dataset in the `nycflights13` package:
+
+Read Chapter 12 if you are uncertain about these functions.
+
+```{r flights-setup}
+require(nycflights13)
+```
+
+
+### Part 1
+
+Use the `contains` function to select columns from the `flights` dataset that contain the word "dep".
+
+```{r}
+nycflights13::flights %>% 
+  select(contains("dep"))
+```
+
+```{r q5-1, exercise = TRUE, exercise.setup = "flights-setup"}
+flights %>%
+  ___(___)
+```
+
+### Part 2
+
+Use starts_with to select columns that start with the letter "s". 
+
+```{r}
+nycflights13::flights %>% 
+  select(starts_with("s"))
+```
+
+```{r q5-2, exercise = TRUE, exercise.setup = "flights-setup"}
+flights %>%
+  ___(___)
+```
+
+## Question 6
+
+Group the `flights` data by origin airport, and then calculate the mean and standard deviation of `dep_delay`, `arr_delay`, `air_time` and `distance` for each origin, ignoring any `NA` values. Chapter 4 discusses ways to deal with `NA`s.
+
+```{r}
+nycflights13::flights %>% 
+  group_by(origin) %>% 
+  summarize(across(c(dep_delay, arr_delay, air_time, distance),
+                   list(mean = mean, sd = sd), 
+                   na.rm = T))
+```
+
+```{r q6, exercise = TRUE, exercise.setup = "flights-setup"}
+flights %>%
+  ___(___) %>% 
+  ___(___)
+```
+
+## Question 7
+
+Use `filter()` to return rows from the `flights` data that originate from JFK and depart (actual, not scheduled time) later than 12:00 pm and earlier than 9:00 pm.
+
+```{r}
+nycflights13::flights %>% 
+  filter(origin == "JFK", dep_time > 1200, dep_time < 2100)
+```
+
+```{r q7, exercise = TRUE, exercise.setup = "flights-setup"}
+flights %>%
+  filter(___)
+```
+
+## Question 8
+
+Create a new column in the flights dataset showing the average speed for each flight, calculated as `distance` divided by `air_time`. Name the column `speed`. Use this column to calculate the average speed for flights departing each NYC origin airport, ignoring any `NA` values. Name that summary column `avg_speed`.
+
+```{r}
+nycflights13::flights %>% 
+  mutate(speed = distance / air_time) %>% 
+  group_by(origin) %>% 
+  summarize(avg_speed = mean(speed, na.rm = T))
+```
+
+```{r q8, exercise = TRUE, exercise.setup = "flights-setup"}
+flights %>%
+  ___(speed = ___) %>% 
+  ___() %>% 
+  ___(avg_speed = ___)
+```
