@@ -25,6 +25,8 @@ Imports:
     purrr,
     readr,
     tidyr,
-    WDI
+    WDI,
+    packrat
 Remotes:
     rundel/learnrhash
+    rstudio/packrat
