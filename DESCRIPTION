@@ -20,13 +20,13 @@ Imports:
     ggplot2,
     jsonlite,
     learnr,
-    learnrhash,
+    learnrhash (>= 0.1.0.9000),
     nycflights13,
     purrr,
     readr,
     tidyr,
     WDI,
-    packrat
+    packrat (>= 0.7.0.1)
 Remotes:
     rundel/learnrhash
     rstudio/packrat
