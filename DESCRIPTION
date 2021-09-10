@@ -28,5 +28,5 @@ Imports:
     WDI,
     packrat (>= 0.7.0.1)
 Remotes:
-    rundel/learnrhash
+    rundel/learnrhash,
     rstudio/packrat
