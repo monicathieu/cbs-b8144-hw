@@ -1,5 +1,6 @@
 ---
-title: "Tutorial"
+title: "Assignment 1"
+subtitle: "Intro to Programming in R"
 output:
   learnr::tutorial:
     progressive: true
@@ -15,9 +16,15 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Questions 1 and 3 are based on material not covered in class, but rather require reading Chapters 4 and 8 in R for Everyone.
 
+Hit the "Run Code" button for every exercise to view your output. **You must run your code to confirm your final answer to each exercise in order for the code to be registered in your assignment submission.** You can re-write run the code as many times as you want. Only the last instance will be saved as your answer.
+
+At the end of the document, remember to generate your solution hash (a text code containing all of your assignment responses) and submit it on Canvas. Submitting that hash code on Canvas is the only way to submit your assignment.
+
 ## Question 1
 
 ### Part 1
+
+You may only submit your answer once for this question.
 
 ```{r q1-1}
 question_checkbox(
