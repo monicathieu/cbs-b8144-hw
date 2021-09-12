@@ -1,15 +1,13 @@
 Package: cbsb8144hw
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Homework Assignments for CBS Intro to Programming in R
+Version: 21.9.0
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Monica",
+           family = "Thieu",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+           email = "monica.thieu@columbia.edu")
+Description: learnr-based homework assignments 1-3 for CBS Intro to Programming in R Fall 2021.
+License: `MIT License
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
