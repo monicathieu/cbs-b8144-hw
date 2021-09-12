@@ -1,0 +1,171 @@
+---
+title: "Assignment 3"
+subtitle: "Intro to Programming in R"
+output:
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+require(learnr)
+require(ggplot2)
+require(dplyr)
+require(tidyr)
+require(purrr)
+require(readr)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+## Intro
+
+All necessary packages from the tidyverse have already been loaded in for this assignment, so you do not need to `library()` them when you wish to use them. Other packages are installed, but not loaded in such a way, so you will need to write your exercise code accordingly to access functions from those packages.
+
+Each question comes with pre-rendered solution output against which you can compare your results. Unless otherwise indicated, you should expect that a correct code solution produces _identical_ output to the solution output shown. If your code produces warning messages, that is okay as long as the output still looks identical to the solution output.
+
+Hit the "Run Code" button for every exercise to view your output. **You must run your code to confirm your final answer to each exercise in order for the code to be registered in your assignment submission.** You can re-write run the code as many times as you want. Only the last instance will be saved as your answer.
+
+At the end of the document, remember to generate your solution hash (a text code containing all of your assignment responses) and submit it on Canvas. Submitting that hash code on Canvas is the only way to submit your assignment.
+
+## Question 1
+
+Read in JSON data on pizzerias in New York, stored online at https://jaredlander.com/data/PizzaPlaces.json , into a tibble, unnesting the data such that each variable is in its own column, with no list-columns. Display the first 10 rows of the data.
+
+As mentioned at the beginning of the assignment, the `jsonlite` package is installed, but has not been pre-loaded for this question, so you will need to write your code accordingly to access the JSON reading function.
+
+```{r}
+jsonlite::fromJSON("https://jaredlander.com/data/PizzaPlaces.json") %>% 
+  as_tibble() %>% 
+  unnest(Details) %>% 
+  head(10)
+```
+
+```{r q1, exercise = TRUE}
+
+```
+
+## Question 2
+
+Using the `diamonds` data from the `ggplot2` package, calculate the mean for each of the numeric columns using `summarize()`, with `across()`, and `where()` to calculate for the numeric columns without having to select them by name. Display the resulting data.
+
+```{r}
+ggplot2::diamonds %>% 
+  summarize(across(where(is.numeric), mean))
+```
+
+```{r q2, exercise = TRUE}
+
+```
+
+## Question 3
+
+Select just the numeric columns from `diamonds` using `where()`, and calculate the mean of each, by iterating with the `map()` function. You can feed the tibble into `map()` as a list, where each column is simply a vector in that list. Display the resulting data.
+
+```{r}
+diamonds %>% 
+  select(where(is.numeric)) %>% 
+  map(mean)
+```
+
+```{r q3, exercise = TRUE}
+
+```
+
+## Question 4
+
+Repeat the same operation from #3, on the numeric columns of `diamonds`, but use `map_df()` to return a tibble instead of a list. Display the resulting data.
+
+```{r}
+diamonds %>% 
+  select(where(is.numeric)) %>% 
+  map_df(mean)
+```
+
+```{r q4, exercise = TRUE}
+
+```
+
+## Question 5
+
+Repeat the same operation from #3, but rather than manually selecting columns before calling `map()`, use `map_if()` to iterate over only the numeric columns, skipping the other columns. Set the argument `.else = ~NULL` to remove the output from non-numeric columns. Display the resulting data.
+
+```{r}
+diamonds %>% map_if(is.numeric, mean, .else = ~NULL)
+```
+
+```{r q5, exercise = TRUE}
+
+```
+
+## Question 6
+
+Use the `WDI` package to download the per capita GDP (the indicator is “NY.GDP.PCAP.KD”) for five countries of your choosing from **2000 to 2016.** Then use `pivot_wider()` from the `tidyr` package to convert it from long to wide format. There should be a column for country, and then a column for each year. Use the `names_prefix` argument to set all the year columns to start with "gdp.", so that they are valid column names that start with letters. Display all 5 rows of the resulting data.
+
+The solution output is shown below for 5 random countries. You may use these same countries in your own work, or select your own from the WDI data.
+
+```{r get-gdp}
+gdp_data <- WDI::WDI_data$country %>% 
+  as_tibble() %>% 
+  filter(region != "Aggregates") %>% 
+  sample_n(5) %>% 
+  pull(iso2c) %>% 
+  WDI::WDI(start = 2000, end = 2016) %>% 
+  pivot_wider(names_from = year, values_from = NY.GDP.PCAP.KD, names_prefix = "gdp.")
+```
+
+```{r}
+gdp_data <- WDI::WDI_data$country %>% 
+  as_tibble() %>% 
+  filter(region != "Aggregates") %>% 
+  sample_n(5) %>% 
+  pull(iso2c) %>% 
+  WDI::WDI(start = 2000, end = 2016) %>% 
+  pivot_wider(names_from = year, values_from = NY.GDP.PCAP.KD, names_prefix = "gdp.")
+
+gdp_data
+```
+
+```{r q6, exercise = TRUE}
+
+```
+
+## Question 7
+
+Using the `airquality` data from the `datasets` package, use `pivot_longer()` from `tidyr` to convert the data from wide format to long format. As shown in the solution output, one column should list the levels "Ozone", "Solar.R", "Wind" and "Temp", and another column should list the corresponding values. "Month" and "Day" should be their own columns. Display the first 10 rows of the resulting data.
+
+```{r}
+airquality %>%
+  as_tibble() %>% 
+  pivot_longer(cols = Ozone:Temp, names_to = "MeasurementType", values_to = "Measurement") %>% 
+  head(10)
+```
+
+```{r q7, exercise = TRUE}
+
+```
+
+## Question 8
+
+Read the GovType.csv file from  https://jaredlander.com/data/GovType.csv . Perform a left join of this data onto the provided GDP data from Question 6 based on the "country"/"Country" columns, such that the 5 rows from the originally selected 5 countries have their government types joined onto the GDP data, with no additional countries added. Display all 5 rows of the resulting data.
+
+The solution output is shown below for 5 random countries. A copy of pivoted GDP data as described in Question 6 has been provided for you, so you will need to read in the GovType data and join the data yourself.
+
+```{r}
+gdp_data %>% 
+  left_join(read_csv("https://jaredlander.com/data/GovType.csv"),
+            by = c("country" = "Country"))
+```
+
+```{r q8, exercise = TRUE, exercise.setup = "get-gdp"}
+gdp_data
+```
+
+## Submit
+
+```{r context="server"}
+learnrhash::encoder_logic(strip_output = TRUE)
+```
+
+```{r encode}
+learnrhash::encoder_ui(ui_before = learnrhash::default_ui(url = "https://courseworks2.columbia.edu/courses/140180/assignments/673021"))
+```
