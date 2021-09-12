@@ -1,5 +1,6 @@
 ---
-title: "Tutorial"
+title: "Assignment 2"
+subtitle: "Intro to Programming in R"
 output:
   learnr::tutorial:
     progressive: true
@@ -7,10 +8,11 @@ runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-require(tidyverse)
+require(dplyr)
+require(ggplot2)
 require(learnr)
 tutorial_options(exercise.reveal_solution = FALSE)
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 watermark <- function (x, y) {
   annotate("text",
@@ -23,9 +25,17 @@ watermark <- function (x, y) {
 }
 ```
 
+## Intro
+
 This homework assignment asks you to practice **plotting and data manipulation.** It requires the use of two new datasets, `starwars` and `flights`, which live in the `dplyr` and `nycflights13` packages respectively.
 
 We have already pre-loaded the packages for you, so you will not need to `library()` them, but you will still need to use correct syntax to access the `starwars` and `flights` dataframes.
+
+Each question comes with a pre-rendered solution output or graph against which you can compare your results. Unless otherwise indicated, you should expect that a correct code solution produces _identical_ output to the solution output shown (minus the graph watermark). If your code produces warning messages, that is okay as long as the output still looks identical to the solution output.
+
+Hit the "Run Code" button for every exercise to view your output. **You must run your code to confirm your final answer to each exercise in order for the code to be registered in your assignment submission.** You can re-write run the code as many times as you want. Only the last instance will be saved as your answer.
+
+At the end of the document, remember to generate your solution hash (a text code containing all of your assignment responses) and submit it on Canvas. Submitting that hash code on Canvas is the only way to submit your assignment.
 
 ## Question 1
 
@@ -65,7 +75,7 @@ dplyr::starwars %>%
 
 ## Question 3
 
-Create density plots of Star Wars characters' heights, faceted by character gender. Change the fill in every density subplot to the color "skyblue". Use the theme `theme_bw()`. Set the y-axis scale on each subplot to vary freely. Label the x-axis and y-axis as shown in the solution graph.
+Create density plots of Star Wars characters' heights, faceted by character gender. Change the fill in every density subplot to the color "skyblue". Use the theme `theme_bw()`. Set the y-axis scale on each subplot to vary freely. Label the x-axis and y-axis as shown in the solution graph. (Again, please copy the axis labels verbatim.)
 
 ```{r}
 dplyr::starwars %>% 
@@ -85,7 +95,7 @@ dplyr::starwars %>%
 
 ## Question 4
 
-Filter the Star Wars data for only characters of species type "Human", "Droid", or "Wookiee". Then, create a violin plot of characters' heights by species. Use the Economist theme in the `ggthemes` package. Label the x-axis, y-axis, and title as shown in the solution graph.
+Filter the Star Wars data for only characters of species type "Human", "Droid", or "Wookiee". Then, create a violin plot of characters' heights by species. Use the Economist theme in the `ggthemes` package. Label the x-axis, y-axis, and title as shown in the solution graph. (Again, please copy the axis labels and title verbatim.)
 
 ```{r}
 dplyr::starwars %>% 
@@ -95,7 +105,7 @@ dplyr::starwars %>%
   watermark(2, 160) +
   labs(x = "Character species",
        y = "Character height (cm)",
-       title = "Violin plots of Star Wars character heights from 3 species") +
+       title = "Star Wars character heights from 3 species") +
   ggthemes::theme_economist()
 ```
 
@@ -107,14 +117,13 @@ dplyr::starwars %>%
 
 These questions will use the `flights` dataset. In each exercise, you will need to fill the marked blanks with code. You will not need to add functions outside of those that are already marked with placeholders for you, but you may sometimes need to put multiple statements inside one set of function parentheses.
 
-Read Chapter 12 if you are uncertain about these functions.
+The solution outputs are capped at 1000 rows, so if your solution comes out to have more than 1000 rows but the first several rows look identical, your code should still be correct.
 
-Each exercise comes with solution output that you can inspect, but the code is hidden so you can write yours on your own. Your code's output should look identical to the solution output, so you can check your work before you finish.
+Read Chapter 12 if you are uncertain about these functions.
 
 ```{r flights-setup}
 require(nycflights13)
 ```
-
 
 ### Part 1
 
@@ -146,7 +155,7 @@ flights %>%
 
 ## Question 6
 
-Group the `flights` data by origin airport, and then calculate the mean and standard deviation of `dep_delay`, `arr_delay`, `air_time` and `distance` for each origin, ignoring any `NA` values. Chapter 4 discusses ways to deal with `NA`s.
+Group the `flights` data by origin airport, and then calculate the mean and standard deviation of `dep_delay`, `arr_delay`, `air_time` and `distance` for each origin, ignoring any `NA` values. Use any suitable method to make your summary column names identical to the summary columns in the solution output. Chapter 4 discusses ways to deal with `NA`s.
 
 ```{r}
 nycflights13::flights %>% 
