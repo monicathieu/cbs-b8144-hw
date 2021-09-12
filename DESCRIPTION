@@ -26,7 +26,8 @@ Imports:
     readr,
     tidyr,
     WDI,
-    packrat (>= 0.7.0.1)
+    packrat (>= 0.7.0.1),
+    ggthemes
 Remotes:
     rundel/learnrhash,
     rstudio/packrat
