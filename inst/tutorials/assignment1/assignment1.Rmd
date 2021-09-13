@@ -149,6 +149,10 @@ acs_ny %>%
 
 Replace in the underscore blanks to call a function that will return the object _class_ of `acs_ny`, as read in from `read_csv()`. The data have been preloaded in this exercise for you, so you don't need to call `read_csv()` again for this exercise.
 
+```{r}
+class(acs_ny)
+```
+
 ```{r q5, exercise = TRUE, exercise.setup = "get-acs-ny"}
 ___(acs_ny)
 ```
