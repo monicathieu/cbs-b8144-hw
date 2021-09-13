@@ -11,7 +11,7 @@ runtime: shiny_prerendered
 require(learnr)
 require(dplyr)
 require(readr)
-tutorial_options(exercise.cap = "Your code here", exercise.reveal_solution = FALSE)
+tutorial_options(exercise.cap = "Your code here")
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
@@ -58,18 +58,10 @@ Replace the underscore blanks below with the correct function to determine wheth
 ___(mysteryVar)
 ```
 
-```{r q1-2a-solution}
-is.logical(mysteryVar)
-```
-
 Replace the underscore blanks below with the correct function to determine whether or not the variable `mysteryVar` is **numeric**. Your code should output `TRUE` or `FALSE`.
 
 ```{r q1-2b, exercise = TRUE, exercise.setup = "q1-setup"}
 ___(mysteryVar)
-```
-
-```{r q1-2b-solution}
-is.numeric(mysteryVar)
 ```
 
 Replace the underscore blanks below with the correct function to determine whether or not the variable `mysteryVar` is **character**. Your code should output `TRUE` or `FALSE`.
@@ -78,18 +70,10 @@ Replace the underscore blanks below with the correct function to determine wheth
 ___(mysteryVar)
 ```
 
-```{r q1-2c-solution}
-is.character(mysteryVar)
-```
-
 Replace the underscore blanks below with the correct function to output the type of the variable `mysteryVar`. Your code should output a character string describing the type of the variable. This answer should be consistent with the answers you got for the previous questions.
 
 ```{r q1-2d, exercise = TRUE, exercise.setup = "q1-setup"}
 ___(mysteryVar)
-```
-
-```{r q1-2d-solution}
-class(mysteryVar)
 ```
 
 ## Question 2
