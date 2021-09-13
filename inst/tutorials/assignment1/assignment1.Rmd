@@ -9,7 +9,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 require(learnr)
-tutorial_options()
+tutorial_options(exercise.cap = "Your code here")
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
