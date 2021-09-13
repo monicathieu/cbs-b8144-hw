@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-Questions 1 and 3 are based on material not covered in class, but rather require reading Chapters 4 and 8 in R for Everyone.
+Questions 1 and 3 are based on material not covered in class, but rather require reading the chapters "Basics of R" and "Writing R Functions" in _R for Everyone._
 
 Hit the "Run Code" button for every exercise to view your output. **You must run your code to confirm your final answer to each exercise in order for the code to be registered in your assignment submission.** You can re-write run the code as many times as you want. Only the last instance will be saved as your answer.
 
