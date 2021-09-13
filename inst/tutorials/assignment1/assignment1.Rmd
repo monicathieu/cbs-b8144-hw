@@ -9,10 +9,13 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 require(learnr)
-tutorial_options(exercise.cap = "Your code here")
-knitr::opts_chunk$set(echo = FALSE)
+require(dplyr)
+require(readr)
+tutorial_options(exercise.cap = "Your code here", exercise.reveal_solution = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
+## Intro
 
 Questions 1 and 3 are based on material not covered in class, but rather require reading the chapters "Basics of R" and "Writing R Functions" in _R for Everyone._
 
@@ -96,6 +99,8 @@ Create a vector of numbers from one to ten called `numVec`. Use the sum function
 ```{r q2, exercise = TRUE}
 numVec <- ___
 
+# Calculate the sum of numVec below and make sure it outputs to console
+
 ```
 
 ## Question 3
@@ -113,6 +118,55 @@ thisFunction <- function () {
 thisFunction(10, 20)
 thisFunction(20, 20)
 thisFunction(10, 10)
+```
+
+## Question 4
+
+The `readr` package has already been loaded using `library()` for you for all of these questions.
+
+```{r get-acs-ny}
+acs_ny <- read_csv("https://jaredlander.com/data/acs_ny.csv")
+```
+
+```{r}
+acs_ny <- read_csv("https://jaredlander.com/data/acs_ny.csv")
+```
+
+### Part 1
+
+Read the `acs_ny` data from https://jaredlander.com/data/acs_ny.csv . Display the _first_ 10 rows of the data. (If the clickable dataframe output says "1-10 of XYZ rows", you still need to reduce the output so only the first 10 rows are displayed.)
+
+```{r}
+acs_ny %>% 
+  head(10)
+```
+
+```{r q4-1, exercise = TRUE}
+
+```
+
+### Part 2
+
+Read the `acs_ny` data from https://jaredlander.com/data/acs_ny.csv again. Display the _last_ 10 rows of the data. (This exercise runs independently from Part 1's exercise, so you will need to read the data in again.)
+
+Again, if the clickable dataframe output says "1-10 of XYZ rows", you still need to reduce the output so only the last 10 rows are displayed.
+
+```{r}
+acs_ny %>% 
+  tail(10)
+```
+
+
+```{r q4-2, exercise = TRUE}
+
+```
+
+## Question 5
+
+Replace in the underscore blanks to call a function that will return the object _class_ of `acs_ny`, as read in from `read_csv()`. The data have been preloaded in this exercise for you, so you don't need to call `read_csv()` again for this exercise.
+
+```{r q5, exercise = TRUE, exercise.setup = "get-acs-ny"}
+___(acs_ny)
 ```
 
 ## Submit
