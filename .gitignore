@@ -44,6 +44,7 @@ renv/*
 # incidental tutorial testing stuff
 inst/tutorials/*/*.html
 inst/tutorials/*/*_files/*
+inst/tutorials/*/rsconnect/*
 
 # The enemy of Macs
 *.DS_Store
