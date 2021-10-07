@@ -11,9 +11,11 @@ runtime: shiny_prerendered
 require(dplyr)
 require(ggplot2)
 require(learnr)
-tutorial_options(exercise.cap = "Your code here")
+tutorial_options(exercise.cap = "Your code here",
+                 exercise.timelimit = 15)
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
+load("data/nycflights13_short.rda")
 watermark <- function (x, y) {
   annotate("text",
            x = x, y = y,
@@ -64,7 +66,7 @@ dplyr::starwars %>%
   ggplot(aes(x = -birth_year)) +
   geom_histogram() +
   watermark(-400, 7) +
-  labs(x = "Character birth year (years before Episode)",
+  labs(x = "Character birth year (years before Episode 4)",
        y = "# of characters",
        title = "Yoda is the outlier on this histogram")
 ```
@@ -95,7 +97,7 @@ dplyr::starwars %>%
 
 ## Question 4
 
-Filter the Star Wars data for only characters of species type "Human", "Droid", or "Wookiee". Then, create a violin plot of characters' heights by species. Use the Economist theme in the `ggthemes` package. Label the x-axis, y-axis, and title as shown in the solution graph. (Again, please copy the axis labels and title verbatim.)
+Filter the Star Wars data for only characters of species type "Human", "Droid", or "Wookiee". Then, create a violin plot of characters' heights by species. Use the Economist theme in the `ggthemes` package (which is installed, but has _not_ been pre-loaded for the exercise). Label the x-axis, y-axis, and title as shown in the solution graph. (Again, please copy the axis labels and title verbatim.)
 
 ```{r}
 dplyr::starwars %>% 
@@ -115,27 +117,27 @@ dplyr::starwars %>%
 
 ## Question 5
 
-These questions will use the `flights` dataset. In each exercise, you will need to fill the marked blanks with code. You will not need to add functions outside of those that are already marked with placeholders for you, but you may sometimes need to put multiple statements inside one set of function parentheses.
+These questions will use a shortened version of the `flights` dataset from the `nycflights13` package (pre-shortened using `slice_sample()` for you so the assignment will run smoothly). In each exercise, you will need to fill the marked blanks with code. You will not need to add functions outside of those that are already marked with placeholders for you, but you may sometimes need to put multiple statements inside one set of function parentheses.
 
 The solution outputs are capped at 1000 rows, so if your solution comes out to have more than 1000 rows but the first several rows look identical, your code should still be correct.
 
-Read Chapter 12 if you are uncertain about these functions.
+Read [AS YET UNKNOWN CHAPTER NUMBER] if you are uncertain about these functions.
 
 ```{r flights-setup}
-require(nycflights13)
+load("data/nycflights13_short.rda")
 ```
 
 ### Part 1
 
-Use the `contains()` function to select columns from the `flights` dataset that contain the word "dep".
+Use the `contains()` function to select columns from the `flights_short` dataset that contain the word "dep".
 
 ```{r}
-nycflights13::flights %>% 
+flights_short %>% 
   select(contains("dep"))
 ```
 
 ```{r q5-1, exercise = TRUE, exercise.setup = "flights-setup"}
-flights %>%
+flights_short %>%
   ___(___)
 ```
 
@@ -144,21 +146,21 @@ flights %>%
 Use `starts_with()` to select columns that start with the letter "s". 
 
 ```{r}
-nycflights13::flights %>% 
+flights_short %>% 
   select(starts_with("s"))
 ```
 
 ```{r q5-2, exercise = TRUE, exercise.setup = "flights-setup"}
-flights %>%
+flights_short %>%
   ___(___)
 ```
 
 ## Question 6
 
-Group the `flights` data by origin airport, and then calculate the mean and standard deviation of `dep_delay`, `arr_delay`, `air_time` and `distance` for each origin, ignoring any `NA` values. Use any suitable method to make your summary column names identical to the summary columns in the solution output. Chapter 4 discusses ways to deal with `NA`s.
+Group the `flights_short` data by origin airport, and then calculate the mean and standard deviation of `dep_delay`, `arr_delay`, `air_time` and `distance` for each origin, ignoring any `NA` values. Use any suitable method to make your summary column names identical to the summary columns in the solution output. [AS YET UNKNOWN CHAPTER NUMBER] discusses ways to deal with `NA`s.
 
 ```{r}
-nycflights13::flights %>% 
+flights_short %>% 
   group_by(origin) %>% 
   summarize(across(c(dep_delay, arr_delay, air_time, distance),
                    list(mean = mean, sd = sd), 
@@ -166,22 +168,22 @@ nycflights13::flights %>%
 ```
 
 ```{r q6, exercise = TRUE, exercise.setup = "flights-setup"}
-flights %>%
+flights_short %>%
   ___(___) %>% 
   ___(___)
 ```
 
 ## Question 7
 
-Use `filter()` to return rows from the `flights` data that originate from JFK and depart (actual, not scheduled time) later than 12:00 pm and earlier than 9:00 pm.
+Use `filter()` to return rows from the `flights_short` data that originate from JFK and depart (actual, not scheduled time) later than 12:00 pm and earlier than 9:00 pm.
 
 ```{r}
-nycflights13::flights %>% 
+flights_short %>% 
   filter(origin == "JFK", dep_time > 1200, dep_time < 2100)
 ```
 
 ```{r q7, exercise = TRUE, exercise.setup = "flights-setup"}
-flights %>%
+flights_short %>%
   filter(___)
 ```
 
@@ -190,14 +192,14 @@ flights %>%
 Create a new column in the flights dataset showing the average speed for each flight, calculated as `distance` divided by `air_time`. Name the column `speed`. Use this column to calculate the average speed for flights departing each NYC origin airport, ignoring any `NA` values. Name that summary column `avg_speed`.
 
 ```{r}
-nycflights13::flights %>% 
+flights_short %>% 
   mutate(speed = distance / air_time) %>% 
   group_by(origin) %>% 
   summarize(avg_speed = mean(speed, na.rm = T))
 ```
 
 ```{r q8, exercise = TRUE, exercise.setup = "flights-setup"}
-flights %>%
+flights_short %>%
   ___(speed = ___) %>% 
   ___(___) %>% 
   ___(avg_speed = ___)

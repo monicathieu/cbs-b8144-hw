@@ -14,11 +14,18 @@ require(dplyr)
 require(tidyr)
 require(purrr)
 require(readr)
-tutorial_options(exercise.cap = "Your code here")
+require(WDI)
+tutorial_options(exercise.cap = "Your code here",
+                 exercise.timelimit = 15)
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+load("data/diamonds_short.rda")
+load("data/gdp_data.rda")
 ```
 
 ## Intro
+
+This homework assignment asks you to practice more **data reading and manipulation.**
 
 All necessary packages from the tidyverse have already been loaded in for this assignment, so you do not need to `library()` them when you wish to use them. Other packages are installed, but not loaded in such a way, so you will need to write your exercise code accordingly to access functions from those packages.
 
@@ -47,15 +54,20 @@ jsonlite::fromJSON("https://jaredlander.com/data/PizzaPlaces.json") %>%
 
 ## Question 2
 
-Using the `diamonds` data from the `ggplot2` package, calculate the mean for each of the numeric columns using `summarize()`, with `across()`, and `where()` to calculate for the numeric columns without having to select them by name. Display the resulting data.
+Using a pre-shortened version of the `diamonds` data from the `ggplot2` package, called `diamonds_short`, calculate the mean for each of the numeric columns using `summarize()`, with `across()`, and `where()` to calculate for the numeric columns without having to select them by name. Display the resulting data.
+
+```{r diamonds-setup}
+load("data/diamonds_short.rda")
+```
+
 
 ```{r}
-ggplot2::diamonds %>% 
+diamonds_short %>% 
   summarize(across(where(is.numeric), mean))
 ```
 
-```{r q2, exercise = TRUE}
-
+```{r q2, exercise = TRUE, exercise.setup = "diamonds-setup"}
+diamonds_short
 ```
 
 ## Question 3
@@ -63,13 +75,13 @@ ggplot2::diamonds %>%
 Select just the numeric columns from `diamonds` using `where()`, and calculate the mean of each, by iterating with the `map()` function. You can feed the tibble into `map()` as a list, where each column is simply a vector in that list. Display the resulting data.
 
 ```{r}
-diamonds %>% 
+diamonds_short %>% 
   select(where(is.numeric)) %>% 
   map(mean)
 ```
 
-```{r q3, exercise = TRUE}
-
+```{r q3, exercise = TRUE, exercise.setup = "diamonds-setup"}
+diamonds_short
 ```
 
 ## Question 4
@@ -77,13 +89,13 @@ diamonds %>%
 Repeat the same operation from #3, on the numeric columns of `diamonds`, but use `map_df()` to return a tibble instead of a list. Display the resulting data.
 
 ```{r}
-diamonds %>% 
+diamonds_short %>% 
   select(where(is.numeric)) %>% 
   map_df(mean)
 ```
 
-```{r q4, exercise = TRUE}
-
+```{r q4, exercise = TRUE, exercise.setup = "diamonds-setup"}
+diamonds_short
 ```
 
 ## Question 5
@@ -91,11 +103,11 @@ diamonds %>%
 Repeat the same operation from #3, but rather than manually selecting columns before calling `map()`, use `map_if()` to iterate over only the numeric columns, skipping the other columns. Set the argument `.else = ~NULL` to remove the output from non-numeric columns. Display the resulting data.
 
 ```{r}
-diamonds %>% map_if(is.numeric, mean, .else = ~NULL)
+diamonds_short %>% map_if(is.numeric, mean, .else = ~NULL)
 ```
 
-```{r q5, exercise = TRUE}
-
+```{r q5, exercise = TRUE, exercise.setup = "diamonds-setup"}
+diamonds_short
 ```
 
 ## Question 6
@@ -104,25 +116,7 @@ Use the `WDI` package to download the per capita GDP (the indicator is “NY.GDP
 
 The solution output is shown below for 5 random countries. You may use these same countries in your own work, or select your own from the WDI data.
 
-```{r get-gdp}
-gdp_data <- WDI::WDI_data$country %>% 
-  as_tibble() %>% 
-  filter(region != "Aggregates") %>% 
-  sample_n(5) %>% 
-  pull(iso2c) %>% 
-  WDI::WDI(start = 2000, end = 2016) %>% 
-  pivot_wider(names_from = year, values_from = NY.GDP.PCAP.KD, names_prefix = "gdp.")
-```
-
 ```{r}
-gdp_data <- WDI::WDI_data$country %>% 
-  as_tibble() %>% 
-  filter(region != "Aggregates") %>% 
-  sample_n(5) %>% 
-  pull(iso2c) %>% 
-  WDI::WDI(start = 2000, end = 2016) %>% 
-  pivot_wider(names_from = year, values_from = NY.GDP.PCAP.KD, names_prefix = "gdp.")
-
 gdp_data
 ```
 
@@ -132,7 +126,7 @@ gdp_data
 
 ## Question 7
 
-Using the `airquality` data from the `datasets` package, use `pivot_longer()` from `tidyr` to convert the data from wide format to long format. As shown in the solution output, one column should list the levels "Ozone", "Solar.R", "Wind" and "Temp", and another column should list the corresponding values. "Month" and "Day" should be their own columns. Display the first 10 rows of the resulting data.
+Using the `airquality` data from the `datasets` package (which has already been loaded), use `pivot_longer()` from `tidyr` to convert the data from wide format to long format. As shown in the solution output, the levels "Ozone", "Solar.R", "Wind" and "Temp" should be listed in a column called "MeasurementType", and the corresponding values should be listed in a column called "Measurement". "Month" and "Day" should be their own columns. Display the first 10 rows of the resulting data.
 
 ```{r}
 airquality %>%
@@ -147,7 +141,7 @@ airquality %>%
 
 ## Question 8
 
-Read the GovType.csv file from  https://jaredlander.com/data/GovType.csv . Perform a left join of this data onto the provided GDP data from Question 6 based on the "country"/"Country" columns, such that the 5 rows from the originally selected 5 countries have their government types joined onto the GDP data, with no additional countries added. Display all 5 rows of the resulting data.
+Read the GovType.csv file from  https://jaredlander.com/data/GovType.csv . Perform a left join of this data onto the provided GDP data from Question 6 based on the "country"/"Country" columns, such that the 5 rows from the originally selected 5 countries have their government types joined onto the GDP data, with no additional countries added. (The new government type column will be all the way on the right side, but you can scroll to the right in the dataframe output viewer to check that the column is there.) Display all 5 rows of the resulting data.
 
 The solution output is shown below for 5 random countries. A copy of pivoted GDP data as described in Question 6 has been provided for you, so you will need to read in the GovType data and join the data yourself.
 
@@ -157,7 +151,7 @@ gdp_data %>%
             by = c("country" = "Country"))
 ```
 
-```{r q8, exercise = TRUE, exercise.setup = "get-gdp"}
+```{r q8, exercise = TRUE}
 gdp_data
 ```
 
