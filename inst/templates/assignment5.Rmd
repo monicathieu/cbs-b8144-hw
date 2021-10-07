@@ -1,0 +1,269 @@
+---
+title: "Assignment 5"
+author: "YOUR NAME HERE"
+date: "10/6/2021"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      error = FALSE)
+## load packages in this chunk here using library() 
+## Best to load ALL necessary packages in this chunk
+## so they are all loaded at the beginning
+
+##
+```
+
+## Intro
+
+Submit your answers as a knitted HTML document with a floating table of contents, showing both code and results. Each question should be its own section. This document has the output format pre-set, so you should get a correctly formatted output document by knitting this R Markdown file. **Turn in the HTML file on Canvas, NOT the R Markdown document!**
+
+Improperly formatted submissions (submitting an Rmd instead of an HTML, or an HTML with a code error such that the document does not render properly, a document where code is not visible) will receive a 50% grade deduction.
+
+Questions where your code returns an error will receive a 50% deduction. Please try your best to make sure your code *runs,* even if you're not sure if the output is correct!
+
+If one chunk is giving you an error and stopping the document from rendering, but the rest of your code works and you need to knit, you can change `error = FALSE` in the setup chunk to `error = TRUE` so that error-producing code chunks will not stop the HTML document from rendering. We recommend not changing this setting unless you really need to render the document with errors included. Most of the time, it's helpful that the HTML document will not render when your code produces an error, because that helps you go back and fix your code.
+
+## Question 1
+
+Read in data from the American Community Survey (ACS), stored at https://www.jaredlander.com/data/acs_ny.csv .
+
+```{r q1-0-load-data}
+# Code that loads data here
+
+```
+
+Estimate a **lasso** model of `FamilyIncome` from the ACS data.
+
+### 1.1
+
+_Prep the data:_ Use functions in the `recipes` package to prep your data. Omit `FoodStamp` as a predictor so that it is absent from the model.
+
+```{r q1-1-prep-data}
+# Code that preps data here
+
+```
+
+_Fit the model:_ Fit the model using functions from the `tidymodels` packages. Set `glmnet` as your model engine.
+
+```{r q1-1-fit-model}
+# Code that fits model here
+
+```
+
+### 1.2
+
+_Explore the model:_ Plot the cross-validation curve.
+
+```{r q1-2-plot-cv-curve}
+# Code that outputs cross-validation curve plot here
+
+```
+
+Write 1-2 sentences explaining what the plot shows.
+
+**REPLACE ME WITH YOUR EXPLANATION OF WHAT IS SHOWN ON THE PLOT**
+
+### 1.3
+
+_Explore the model:_ Plot the shrinkage path.
+
+```{r q1-3-plot-shrinkage-path}
+# Code that outputs shrinkage path plot here
+
+```
+
+Write 1-2 sentences explaining what the plot shows.
+
+**REPLACE ME WITH YOUR EXPLANATION OF WHAT IS SHOWN ON THE PLOT**
+
+### 1.4
+
+_Prepare to explore the model:_ Extract the underlying model object.
+
+_Explore the model:_ 
+
+TODO: Refactor because `penalty` is the standardized `parsnip::linear_reg()` arg name for `lambda`
+TODO: Re-implement this question using `tune()`, etc, and `select_best()` vs. `select_by_one_std_err()` to get min penalty and 1se penalty
+
+Select and report the model with the "absolute best" penalty.
+
+```{r q1-4-lambda.min}
+# Code that outputs lambda.min here
+
+```
+
+Select and report the simplest model whose penalty value is within 1 standard error of the "absolute best" model.
+
+```{r q1-4-lambda.1se}
+# Code that outputs lambda.1se here
+
+```
+
+Show the coeﬃcients for both models, both numerically and as coefficient plots.
+
+```{r q1-4-coefs-num-lambda.min}
+# Code that outputs numerical model coefficients using lambda.min here
+
+```
+
+```{r q1-4-coefs-num-lambda.1se}
+# Code that outputs numerical model coefficients using lambda.1se here
+
+```
+
+```{r q1-4-coefplot-lambda.min}
+# Code that outputs coefplot using lambda.min here
+
+```
+
+```{r q1-4-coefplot-lambda.1se}
+# Code that outputs coefplot using lambda.1se here
+
+```
+
+Write 2-3 sentences explaining:
+
+- what the two values of `penalty` represent
+- which value of `penalty` keeps fewer predictor variables in the model
+- why
+
+**REPLACE ME WITH YOUR EXPLANATION OF THE TWO PENALTY VALUES**
+
+## Question 2
+
+Estimate a **ridge** model of `FamilyIncome` in the same ACS dataset.
+
+### 2.1
+
+_Prep the data:_ Use functions in the `recipes` package to prep your data.
+
+```{r q2-1-prep-data}
+# Code that preps data here
+
+```
+
+_Fit the model:_ Fit the model using functions from the `tidymodels` packages. Set `glmnet` as your model engine, with the correct parameter to run _ridge_ regression instead of _lasso_ regression.
+
+```{r q2-1-fit-model}
+# Code that fits model here
+
+```
+
+### 2.2
+
+_Explore the model:_ Show the coeﬃcients for both the ridge model and the lasso model from Question 1 with `lambda.1se`, both numerically and as coefficient plots.
+
+```{r q2-2-coefs-num-ridge}
+# Code that outputs numerical model coefficients using the ridge model here
+
+```
+
+```{r q2-2-coefs-num-lasso-lambda.1se}
+# Code that outputs numerical model coefficients using the lambda.1se lasso model here
+
+```
+
+```{r q2-2-coefplot-ridge}
+# Code that outputs coefplot using the ridge model here
+
+```
+
+```{r q2-2-coefplot-lasso-lambda.1se}
+# Code that outputs coefplot using the lambda.1se lasso model here
+
+```
+
+Write 2-3 sentences explaining how the two sets of coefficients differ, and why.
+
+**REPLACE ME WITH YOUR EXPLANATION OF THE RIDGE VS LASSO COEFFICIENTS**
+
+## Question 3
+
+Estimate an _elastic net_ model of `FamilyIncome` in the same ACS dataset, using _tuning_ and _cross-validation_. An elastic net model is a blend of a pure lasso and pure ridge model. In this question, you will tune the amount of "lasso-ness" vs. "ridge-ness" in the model.
+
+TODO: Find out how cross-validation is implemented now. Is it prepped using `rsample`? The `parsnip` glmnet option appears not to specify CV itself. It does appear that `rsample::vfold_cv()` is called first and then that stuff gets fed into the model. The `yardstick` package allows you to set evaluation metrics
+
+### 3.1
+
+_Prep the data:_ Use the data that were prepped for Question 2. You do not need to re-prep the data.
+
+_Fit the model:_ Fit the model using functions from the `tidymodels` packages.
+
+- Set the `mixture` parameter to be tuned using `tune()` to find the optimal value that blends lasso and ridge regression.
+- Tune using a random grid of 10 possible parameter values of `mixture` between 0 and 1.
+- Use `roc_auc` to tune parameter values based on which one maximizes ROC area under the curve.
+- Set `glmnet` as your model engine.
+
+```{r q3-1-fit-model}
+# Code that fits model here
+
+```
+
+Set `xgboost` as your model engine, with appropriate `objective` and `eval_metric` arguments for a _continuous_ outcome variable, because `FamilyIncome` is continuous.
+
+Use a random portion of the data as a validation set for the watchlist. TODO: Figure out if separate watchlist needs to be set by sending argument into `set_engine()` or using `rsample` or something
+
+Use the `tune` package from `tidymodels` to tune the model parameters `alpha`
+
+Choose appropriate values of `tree_depth`, `learn_rate` and `stop_iter` to minimize validation error. 
+
+```{r q3-1-fit-model}
+# Code that fits model here
+
+```
+
+Write 1-2 sentences describing other values of `tree_depth`, `learn_rate`, and `stop_iter` that you tested. Use the `tune` package from `tidymodels` to tune your parameters is optional, and may be helpful. TODO: Wait and see if this is what Jared demonstrates
+
+(After you have run the parameter tuning once to choose your final parameters, you can set that code to eval = FALSE so that it does not run and slow down your final HTML knitting.)
+
+### 3.2
+
+_Explore the model:_ Show a variable importance plot.
+
+For the top three predictors, write 1-2 sentences each describing the predictor and interpreting the coefficient.
+
+### 3.3
+
+_Explore the model:_ Use the `dygraphs` package to plot the training and validation loss (stored in the evaluation_log slot of the model).
+
+Write 1-2 sentences explaining what the plot shows.
+
+## Question 4
+
+Download the 2015 NFL Play-by-Play data from https://www.jaredlander.com/data/pbp-2015.csv  and fit a logistic regression model to predict whether a given play is a rush or pass play (`PlayType`).
+
+### 4.1
+
+Prep the data: 
+
+- Filter the data to include plays from just one team
+- Filter the data to include only rows where `PlayType` is either "RUSH" or "PASS". 
+- Convert values of "RUSH" and "PASS" in `PlayType` to 0 and 1 respectively.
+
+Remove the predictor columns `IsRush` and `IsPass` from the recipe, because these columns are collinear with the outcome variable.
+
+```{r}
+
+```
+
+
+### 4.2
+
+Fit the model: Using columns of your choice, create the appropriate X and Y matrices and xgb.DMatrix objects to fit an XGBoost model.  Use a random portion of the data as a validation set for the watchlist. Set appropriate objective and eval_metric arguments based on the data type of the outcome variable, and choose appropriate max_depth, eta and nrounds settings to minimize validation error. Write 1-2 sentences describing other values of max_depth, eta and nrounds that you tested. Using the dials and workflows packages to tune your parameters is optional, and may be helpful. (After you have run the parameter tuning once to choose your final parameters, you can set that code to eval = FALSE so that it does not run and slow down your final HTML knitting.)
+
+
+
+### 4.3
+
+Explore the model: Show a variable importance plot.
+
+For the top three predictors, write 1-2 sentences each describing the predictor and interpreting the coefficient.
+
+### 4.4
+
+Explore the model: Plot the training and validation loss. Write 1-2 sentences explaining what the plot shows.
