@@ -42,6 +42,7 @@ vignettes/*.pdf
 renv/*
 
 # incidental tutorial testing stuff
+inst/templates/*.html
 inst/tutorials/*/*.html
 inst/tutorials/*/*_files/*
 inst/tutorials/*/rsconnect/*
