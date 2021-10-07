@@ -1,0 +1,229 @@
+---
+title: "Assignment 4"
+author: "YOUR NAME HERE"
+date: "Due 10/11/2021"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      error = FALSE)
+## load packages in this chunk here using library() 
+## Best to load ALL necessary packages in this chunk
+## so they are all loaded at the beginning
+
+##
+```
+
+## Intro
+
+Submit your answers as a knitted HTML document with a floating table of contents, showing both code and results. Each question should be its own section. This document has the output format pre-set, so you should get a correctly formatted output document by knitting this R Markdown file. **Turn in the HTML file on Canvas, NOT the R Markdown document!**
+
+Improperly formatted submissions (submitting an Rmd instead of an HTML, or an HTML with a code error such that the document does not render properly, a document where code is not visible) will receive a 50% grade deduction.
+
+Questions where your code returns an error will receive a 50% deduction. Please try your best to make sure your code *runs,* even if you're not sure if the output is correct!
+
+If one chunk is giving you an error and stopping the document from rendering, but the rest of your code works and you need to knit, you can change `error = FALSE` in the setup chunk to `error = TRUE` so that error-producing code chunks will not stop the HTML document from rendering. We recommend not changing this setting unless you really need to render the document with errors included. Most of the time, it's helpful that the HTML document will not render when your code produces an error, because that helps you go back and fix your code.
+
+## Question 1
+
+Read the NYC Pluto data about land value from in Manhattan from https://query.data.world/s/WuYif0WbZCxzOLjLh95TY9rK--Tw64 . Ignore any warnings caused by using `read_csv()`. The data contain characteristic information about individual lots in Manhattan. We want to model the value of lots (`TotalValue`) as a function of its characteristics.
+
+```{r q1-0-load-data}
+# Code that loads data here
+
+```
+
+### 1.1
+
+First, choose 3 variables in the Pluto data you find interesting. For each of these 3 variables:
+
+- Write 1-2 sentences describing why you picked that variable (you may use data-driven methods or intuition!),
+- Generate and report at least 2 relevant summary statistics of that variable,
+- Show a plot that helps you illustrate the relationship between that variable and `TotalValue`. Choose the type of plot that makes the most sense to you for each variable.
+
+**REPLACE ME with 1-2 sentences describing variable 1 and why you picked it**
+
+```{r q1-1-1-summary-stats}
+# Code that outputs 2 relevant summary statistics for variable 1 here
+
+```
+
+```{r q1-1-1-plot}
+# Code that outputs plot of variable 1 and TotalValue here
+
+```
+
+**REPLACE ME with 1-2 sentences describing variable 2 and why you picked it**
+
+```{r q1-1-2-summary-stats}
+# Code that outputs 2 relevant summary statistics for variable 2 here
+
+```
+
+```{r q1-1-2-plot}
+# Code that outputs plot of variable 1 and TotalValue here
+
+```
+
+**REPLACE ME with 1-2 sentences describing variable 3 and why you picked it**
+
+```{r q1-1-3-summary-stats}
+# Code that outputs 2 relevant summary statistics for variable 3 here
+
+```
+
+```{r q1-1-3-plot}
+# Code that outputs plot of variable 3 and TotalValue here
+
+```
+
+### 1.2
+
+Next, regress `TotalValue` against `FireService`, `LotArea`, `LotFront` and `HistoricDistrict`.
+
+```{r q1-2-regression}
+# Code that fits regression here
+
+```
+
+Use the `coefplot` package to visualize the regression results with a coefficient plot.
+
+```{r q1-2-coefplot}
+# Code that outputs coefplot here
+
+```
+
+Interpret each coeﬃcient in your own words (1-2 sentences per coefficient).
+
+**FILL IN BELOW WITH COEFFICIENT INTERPRETATIONS OF THE FOLLOWING VARIABLES**
+
+- Intercept: **FILL ME IN**
+- `FireService`: **FILL ME IN**
+- `LotArea`: **FILL ME IN**
+- `LotFront`: **FILL ME IN**
+- `HistoricDistrict`: **FILL ME IN**
+
+###  1.3
+
+Continue adjusting your model on the Pluto data by changing which predictor variables are included in the model until the BIC of the model is below **1,040,000.**
+
+```{r q1-3-refit-model}
+# Code that re-fits model here
+
+```
+
+Display the BIC of your final model.
+
+```{r q1-3-report-bic}
+# Code that outputs model BIC here
+
+```
+
+Show a `coefplot` coefficient plot of the final model.
+
+```{r q1-3-coefplot}
+# Code that outputs coefplot here
+
+```
+
+Display a coefficient plot, with multiplot, showing the coefficients of both the previous model and this model.
+
+```{r q1-3-multiplot}
+# Code that outputs multiplot here
+
+```
+
+## Question 2
+
+Load the `orings` dataset by downloading the `daag_orings.csv` file from Canvas into the "data" subfolder of your R project folder, and then reading the data into R. The dataset contains information on characteristics of space shuttle launches in the early 1980s, and the number and type of 45 O-ring failures. Investigate whether the temperature at launch has an impact on the probability of O-ring failure using binary (logistic) regression.
+
+```{r q2-0-load-data}
+# Code that loads data here
+
+```
+
+### 2.1
+
+First, use `mutate()` to create a binary variable indicating whether there is any erosion (`Erosion`) or blow-by (`Blowby`). The variable should be 0 if there is neither erosion nor blow-by for a given O-ring failure, and 1 if there is either erosion or blow-by (or both).
+
+```{r q2-1-create-var}
+# Code that creates new variable here
+
+```
+
+### 2.2
+
+Next, train a logistic regression where this new variable is the response and `Temperature` is a predictor.
+
+```{r q2-2-fit-model}
+# Code that fits model here
+
+```
+
+Does `Temperature` impact the risk of o-ring failure positively, negatively, or not at all? Write 1-2 sentences interpreting the result of your regression.
+
+**REPLACE ME WITH YOUR INTERPRETATION**
+
+## Question 3
+
+Load the `DoctorAUS` dataset from the `Ecdat` package. The dataset contains information on Australians' doctor visits from 1977-78. We want to model the number of doctor visits per person (`doctorco`) as a function of other health-related predictor variable(s).
+
+```{r q3-0-load-data}
+# Code that loads data here
+
+```
+
+
+### 3.1
+
+Use Poisson regression to model `doctorco` as a function of 1-5 variables of your choice (more is not necessarily better!).
+
+```{r q3-1-fit-model}
+# Code that fits model here
+
+```
+
+Write 1-2 sentences describing why you picked each of those variables. 
+
+**REPLACE ME WITH YOUR RATIONALE FOR PICKING EACH VARIABLE**
+
+Report the BIC of your model.
+
+```{r q3-1-report-bic}
+# Code that outputs model BIC here
+
+```
+
+Display a coefficient plot _on the original scale of the data_ by setting the `trans` argument of `coefplot()` to the appropriate inverse function. This requires reading (AS YET UN-NUMBERED TEXTBOOK SECTION).
+
+```{r q3-1-coefplot}
+# Code that outputs coefplot here
+
+```
+
+### 3.2
+
+Model the number of doctor visits as a function of your variables of choice again, this time accounting for overdispersion by using a quasipoisson family.
+
+```{r q3-2-fit-new-model}
+# Code to fit new model here
+
+```
+
+Report the overdispersion parameter of your new model.
+
+```{r q3-2-report-overdispersion}
+# Code that prints out model overdispersion parameter here
+
+```
+
+Display a multiplot of the previous model and this one.
+
+```{r q4-2-multiplot}
+# Code that outputs multiplot here
+
+```
