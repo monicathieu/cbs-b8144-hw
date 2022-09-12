@@ -7,6 +7,8 @@ require(ggcheck)
 
 load(here::here("inst", "tutorials", "assignment2", "data", "nycflights13_short.rda"))
 
+path_to_submissions <- here::here("ignore", "submissions", "a2")
+
 ## graders for more elaborate grading logic ----
 
 grader_a2_q5_1 <- grade_this({
@@ -53,9 +55,11 @@ grader_a2_q8 <- grade_this({
 
 ## read in submissions downloaded from canvas ----
 
-submissions <- tibble(filename = list.files("~/Downloads/submissions_a2", full.names = TRUE)) %>%
+submissions <- tibble(filename = list.files(path_to_submissions, full.names = TRUE),
+                      student = list.files(path_to_submissions)) %>%
   # possible to have "late" in the filename after the student name
-  separate(filename, into = c(NA, NA, NA, NA, NA, NA, "student", NA, NA, NA), remove = FALSE) %>% 
+  # which will throw an "additional pieces" warning for separate()
+  separate(student, into = c("student", NA, NA, NA)) %>% 
   mutate(hash = map_chr(filename,
                         ~.x %>% 
                           read_lines() %>% 
@@ -67,7 +71,7 @@ submissions <- tibble(filename = list.files("~/Downloads/submissions_a2", full.n
 
 ## extract hashery ----
 
-exercises <- learnrhash::extract_exercises(submissions, hash) %>% 
+exercises <- learnrhash::extract_exercises(submissions, "hash") %>% 
   # remove carriage returns from windows machines
   mutate(code = map_chr(code, str_remove_all, "\r"))
 
@@ -246,18 +250,25 @@ scored_a2_q4 <- exercises %>%
                           ~mock_this_exercise_hash(.x)),
          answer_plot = map(answer_env, pluck, ".result"),
          answer_is_ggplot = map_lgl(answer_plot, is.ggplot),
-         has_geom = map_lgl(answer_plot,
-                            uses_geoms,
-                            "violin"),
+         has_geom = map2_lgl(answer_plot, answer_is_ggplot,
+                             function (this_plot, is_plot) {
+                               if (!is_plot) return (FALSE)
+                               uses_geoms(this_plot, "violin")
+                             }
+         ),
          data_are_filtered = map_lgl(answer_plot,
                                      ~.x %>% 
                                        pluck("data") %>% 
                                        identical(filter(dplyr::starwars,
                                                         species %in% c("Human", "Droid", "Wookiee")))),
-         has_set_labs = map_lgl(answer_plot,
-                                uses_labs,
-                                geom = "violin",
-                                labs = c("x", "y", "title")),
+         has_set_labs = map2_lgl(answer_plot, answer_is_ggplot,
+                                 function (this_plot, is_plot) {
+                                   if (!is_plot) return (FALSE)
+                                   uses_labs(this_plot,
+                                             geom = "violin",
+                                             labs = c("x", "y", "title"))
+                                 }
+         ),
          calls_theme = map_lgl(answer, ~grepl("theme_economist()", .x)),
          correct = answer_is_ggplot & has_geom & data_are_filtered & has_set_labs & calls_theme,
          # people whose plots appear correct but set labs weirdly
@@ -311,7 +322,7 @@ scored_a2_q8 <- exercises %>%
 
 ## assembling stuff together for grading
 
-scored_all <- list(scored_a2_q1,
+scored_a2 <- list(scored_a2_q1,
                    scored_a2_q2,
                    scored_a2_q3,
                    scored_a2_q4,
