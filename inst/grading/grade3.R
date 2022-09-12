@@ -5,6 +5,8 @@ source(here::here("inst", "grading", "setup.R"))
 load(here::here("inst", "tutorials", "assignment3", "data", "diamonds_short.rda"))
 load(here::here("inst", "tutorials", "assignment3", "data", "gdp_data.rda"))
 
+path_to_submissions <- here::here("ignore", "submissions", "a3")
+
 ## graders for more elaborate grading logic ----
 
 solution_a3_q1 <- jsonlite::fromJSON("https://jaredlander.com/data/PizzaPlaces.json") %>% 
@@ -53,9 +55,11 @@ grader_a3_q3 <- grade_this({
 
 ## read in submissions downloaded from canvas ----
 
-submissions <- tibble(filename = list.files("~/Downloads/submissions_a3", full.names = TRUE)) %>%
+submissions <- tibble(filename = list.files(path_to_submissions, full.names = TRUE),
+                      student = list.files(path_to_submissions)) %>%
   # possible to have "late" in the filename after the student name
-  separate(filename, into = c(NA, NA, NA, NA, NA, NA, "student", NA, NA, NA), remove = FALSE) %>% 
+  # which will throw an "additional pieces" warning for separate()
+  separate(student, into = c("student", NA, NA, NA)) %>% 
   mutate(hash = map_chr(filename,
                         ~.x %>% 
                           read_lines() %>% 
@@ -67,7 +71,7 @@ submissions <- tibble(filename = list.files("~/Downloads/submissions_a3", full.n
 
 ## extract hashery ----
 
-exercises <- learnrhash::extract_exercises(submissions, hash) %>% 
+exercises <- learnrhash::extract_exercises(submissions, "hash") %>% 
   # remove carriage returns from windows machines
   mutate(code = map_chr(code, str_remove_all, "\r"))
 
