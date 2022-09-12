@@ -2,6 +2,7 @@ require(tidyverse)
 require(magrittr)
 require(gradethis)
 require(testthat)
+# note!!! this worked with version of learnrhash af125d30
 require(learnrhash)
 require(rlang)
 
