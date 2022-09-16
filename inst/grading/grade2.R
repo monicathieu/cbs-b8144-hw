@@ -309,7 +309,7 @@ scored_a2_q8 <- exercises %>%
   mutate(answer = str_replace_all(answer, "flights ", "flights_short "),
          correct = map_lgl(answer, grade_custom_hash, grader = grader_a2_q8))
 
-## assembling stuff together for grading
+## assembling stuff together for grading ----
 
 scored_all <- list(scored_a2_q1,
                    scored_a2_q2,
