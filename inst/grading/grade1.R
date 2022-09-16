@@ -2,6 +2,8 @@
 
 source(here::here("inst", "grading", "setup.R"))
 
+path_to_submissions <- here::here("ignore", "submissions", "a1")
+
 ## graders for more elaborate grading logic ----
 
 grader_a1_q2 <- grade_this({
@@ -50,8 +52,9 @@ grader_a1_q4_2 <- grade_this({
 
 ## read in submissions downloaded from canvas ----
 
-submissions <- tibble(filename = list.files("~/Downloads/submissions", full.names = TRUE)) %>%
-  separate(filename, into = c(NA, NA, NA, NA, NA, "student", NA, NA, NA), remove = FALSE) %>% 
+submissions <- tibble(filename = list.files(path_to_submissions, full.names = TRUE),
+                      student = list.files(path_to_submissions)) %>%
+  separate(student, into = c("student", NA, NA, NA)) %>% 
   mutate(hash = map_chr(filename,
                     ~.x %>% 
                       read_lines() %>% 

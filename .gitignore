@@ -49,3 +49,6 @@ inst/tutorials/*/rsconnect/*
 
 # The enemy of Macs
 *.DS_Store
+
+# private files like actual student responses
+ignore/*
