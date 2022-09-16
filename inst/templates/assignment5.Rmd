@@ -1,7 +1,7 @@
 ---
 title: "Assignment 5"
 author: "YOUR NAME HERE"
-date: "10/6/2021"
+date: "Fall 2021"
 output: 
   html_document:
     toc: true
@@ -30,240 +30,328 @@ If one chunk is giving you an error and stopping the document from rendering, bu
 
 ## Question 1
 
-Read in data from the American Community Survey (ACS), stored at https://www.jaredlander.com/data/acs_ny.csv .
+Read in data from the American Community Survey (ACS), stored at <https://www.jaredlander.com/data/acs_ny.csv> . Use base R's `read.csv()` to read in the data, and then change it to a tibble after reading it in.
 
 ```{r q1-0-load-data}
-# Code that loads data here
 
 ```
 
-Estimate a **lasso** model of `FamilyIncome` from the ACS data.
+Estimate a **ridge** model of `FamilyIncome` from the ACS data.
 
-### 1.1
+### 1.1: Prep the data
 
-_Prep the data:_ Use functions in the `recipes` package to prep your data. Omit `FoodStamp` as a predictor so that it is absent from the model.
+Split the data into training and testing sets, with 80% of the data in the training set.
+
+```{r q1-1-split-data}
+
+```
+
+Extract the training and testing data into variables for later use.
+
+```{r q1-1-extract-train-and-test-data}
+
+```
+
+Next, use functions in the `recipes` package to prep your data.
+
+- Omit `FoodStamp` as a predictor so that it is absent from the model.
+- Set all nominal predictors to be turned into dummy variables.
+- Normalize all numeric predictors.
 
 ```{r q1-1-prep-data}
-# Code that preps data here
 
 ```
 
-_Fit the model:_ Fit the model using functions from the `tidymodels` packages. Set `glmnet` as your model engine.
+### 1.2: Fit the model
 
-```{r q1-1-fit-model}
-# Code that fits model here
+*Fit the model:* Fit the model using functions from the `tidymodels` packages. Set `glmnet` as your model engine. Set `penalty` to 0, the lowest possible value, and set `mixture` to the correct value to run a pure ridge regression.
 
-```
-
-### 1.2
-
-_Explore the model:_ Plot the cross-validation curve.
-
-```{r q1-2-plot-cv-curve}
-# Code that outputs cross-validation curve plot here
+```{r q1-2-set-model}
 
 ```
 
-Write 1-2 sentences explaining what the plot shows.
+Set up the workflow.
 
-**REPLACE ME WITH YOUR EXPLANATION OF WHAT IS SHOWN ON THE PLOT**
-
-### 1.3
-
-_Explore the model:_ Plot the shrinkage path.
-
-```{r q1-3-plot-shrinkage-path}
-# Code that outputs shrinkage path plot here
+```{r q-1-2-set-workflow}
 
 ```
 
-Write 1-2 sentences explaining what the plot shows.
+Fit the model workflow on the training data.
 
-**REPLACE ME WITH YOUR EXPLANATION OF WHAT IS SHOWN ON THE PLOT**
-
-### 1.4
-
-_Prepare to explore the model:_ Extract the underlying model object.
-
-_Explore the model:_ 
-
-TODO: Refactor because `penalty` is the standardized `parsnip::linear_reg()` arg name for `lambda`
-TODO: Re-implement this question using `tune()`, etc, and `select_best()` vs. `select_by_one_std_err()` to get min penalty and 1se penalty
-
-Select and report the model with the "absolute best" penalty.
-
-```{r q1-4-lambda.min}
-# Code that outputs lambda.min here
+```{r q1-2-fit-model}
 
 ```
 
-Select and report the simplest model whose penalty value is within 1 standard error of the "absolute best" model.
+### 1.3: Explore the model
 
-```{r q1-4-lambda.1se}
-# Code that outputs lambda.1se here
+Extract the underlying model object.
 
-```
-
-Show the coeﬃcients for both models, both numerically and as coefficient plots.
-
-```{r q1-4-coefs-num-lambda.min}
-# Code that outputs numerical model coefficients using lambda.min here
+```{r q1-3-extract-model}
 
 ```
 
-```{r q1-4-coefs-num-lambda.1se}
-# Code that outputs numerical model coefficients using lambda.1se here
+Plot a coefficient plot of the model, with the coefficients sorted by magnitude.
+
+```{r q1-3-coefplot}
 
 ```
 
-```{r q1-4-coefplot-lambda.min}
-# Code that outputs coefplot using lambda.min here
+Write 2-3 sentences identifying the 3 strongest predictors (excluding the intercept) and interpreting why those predictors might predict family income.
 
-```
-
-```{r q1-4-coefplot-lambda.1se}
-# Code that outputs coefplot using lambda.1se here
-
-```
-
-Write 2-3 sentences explaining:
-
-- what the two values of `penalty` represent
-- which value of `penalty` keeps fewer predictor variables in the model
-- why
-
-**REPLACE ME WITH YOUR EXPLANATION OF THE TWO PENALTY VALUES**
+**REPLACE ME WITH YOUR EXPLANATION**
 
 ## Question 2
 
-Estimate a **ridge** model of `FamilyIncome` in the same ACS dataset.
+Estimate a **lasso** model of `FamilyIncome` in the same ACS dataset, this time using *tuning* and *cross-validation* to choose model parameter values.
 
-### 2.1
+### 2.1: Prep the data
 
-_Prep the data:_ Use functions in the `recipes` package to prep your data.
+Prepare a cross-validation spec with 8 folds for the training data that you extracted for Question 1.
 
-```{r q2-1-prep-data}
-# Code that preps data here
-
-```
-
-_Fit the model:_ Fit the model using functions from the `tidymodels` packages. Set `glmnet` as your model engine, with the correct parameter to run _ridge_ regression instead of _lasso_ regression.
-
-```{r q2-1-fit-model}
-# Code that fits model here
+```{r q2-1-set-cv}
 
 ```
 
-### 2.2
+### 2.2: Fit the model
 
-_Explore the model:_ Show the coeﬃcients for both the ridge model and the lasso model from Question 1 with `lambda.1se`, both numerically and as coefficient plots.
+Set up the model with `glmnet` as your model engine, with the correct setting of the `mixture` parameter to run *lasso* regression instead of *ridge* regression. This time, set the `penalty` parameter to be tuned using `tune()` to find the optimal penalty value for model complexity.
 
-```{r q2-2-coefs-num-ridge}
-# Code that outputs numerical model coefficients using the ridge model here
-
-```
-
-```{r q2-2-coefs-num-lasso-lambda.1se}
-# Code that outputs numerical model coefficients using the lambda.1se lasso model here
+```{r q2-2-set-model}
 
 ```
 
-```{r q2-2-coefplot-ridge}
-# Code that outputs coefplot using the ridge model here
+Set up a tuning grid of 50 random possible parameter values of `penalty`.
+
+```{r q2-2-set-tuning-grid}
 
 ```
 
-```{r q2-2-coefplot-lasso-lambda.1se}
-# Code that outputs coefplot using the lambda.1se lasso model here
+Set up `rmse` and `mae` as the evaluation metrics, to tune parameter values based on which one minimizes root-mean-squared error or median absolute error.
+
+```{r q2-2-set-tuning-metrics}
 
 ```
 
-Write 2-3 sentences explaining how the two sets of coefficients differ, and why.
+Set up the workflow by updating the workflow from question 1 to use the new model object for Question 2, but retaining the preprocessing recipe that you prepped for Question 1.
+
+```{r q-2-2-update-workflow}
+
+```
+
+Fit the grid of models on the cross-validation set you specified in 2.1 on the training data.
+
+```{r q2-2-fit-model-grid}
+
+```
+
+### 2.3: Explore the model
+
+Select the model with the "absolute best" penalty based on RMSE.
+
+```{r q2-3-penalty-best-rmse}
+
+```
+
+Select the model with the "absolute best" penalty based on MAE.
+
+```{r q2-3-penalty-best-mae}
+
+```
+
+Identify whether the same penalty value is the best according to RMSE as according to MAE.
+
+**REPLACE ME WITH YOUR ANSWER**
+
+Finalize the workflow using the best model by RMSE, fit the final model, and extract the resulting `glmnet` model object.
+
+```{r q2-3-finalize-extract}
+
+```
+
+Plot a multiplot of the coefficients of the final ridge model from Q1 and the best-by-RMSE lasso model that you just extracted. Sort the coefficients by magnitude.
+
+```{r q2-3-multiplot}
+
+```
+
+Write 2-3 sentences explaining why the coefficients differ between these models.
 
 **REPLACE ME WITH YOUR EXPLANATION OF THE RIDGE VS LASSO COEFFICIENTS**
 
 ## Question 3
 
-Estimate an _elastic net_ model of `FamilyIncome` in the same ACS dataset, using _tuning_ and _cross-validation_. An elastic net model is a blend of a pure lasso and pure ridge model. In this question, you will tune the amount of "lasso-ness" vs. "ridge-ness" in the model.
+Estimate an *elastic net* model of `FamilyIncome` in the same ACS dataset, using *tuning* and *cross-validation*. An elastic net model is a blend of a pure lasso and pure ridge model. In this question, you will tune the `mixture` parameter to adjust the amount of "lasso-ness" vs. "ridge-ness" in the model.
 
-TODO: Find out how cross-validation is implemented now. Is it prepped using `rsample`? The `parsnip` glmnet option appears not to specify CV itself. It does appear that `rsample::vfold_cv()` is called first and then that stuff gets fed into the model. The `yardstick` package allows you to set evaluation metrics
+### 3.1: Fit the model
 
-### 3.1
+Set up the `glmnet` model, setting both the `penalty` and `mixture` parameters to be tuned using `tune()`.
 
-_Prep the data:_ Use the data that were prepped for Question 2. You do not need to re-prep the data.
-
-_Fit the model:_ Fit the model using functions from the `tidymodels` packages.
-
-- Set the `mixture` parameter to be tuned using `tune()` to find the optimal value that blends lasso and ridge regression.
-- Tune using a random grid of 10 possible parameter values of `mixture` between 0 and 1.
-- Use `roc_auc` to tune parameter values based on which one maximizes ROC area under the curve.
-- Set `glmnet` as your model engine.
-
-```{r q3-1-fit-model}
-# Code that fits model here
+```{r q3-1-set-model}
 
 ```
 
-Set `xgboost` as your model engine, with appropriate `objective` and `eval_metric` arguments for a _continuous_ outcome variable, because `FamilyIncome` is continuous.
+Set up a tuning grid of 100 random parameter combinations of `penalty` and `mixture`.
 
-Use a random portion of the data as a validation set for the watchlist. TODO: Figure out if separate watchlist needs to be set by sending argument into `set_engine()` or using `rsample` or something
-
-Use the `tune` package from `tidymodels` to tune the model parameters `alpha`
-
-Choose appropriate values of `tree_depth`, `learn_rate` and `stop_iter` to minimize validation error. 
-
-```{r q3-1-fit-model}
-# Code that fits model here
+```{r q3-1-set-tuning-grid}
 
 ```
 
-Write 1-2 sentences describing other values of `tree_depth`, `learn_rate`, and `stop_iter` that you tested. Use the `tune` package from `tidymodels` to tune your parameters is optional, and may be helpful. TODO: Wait and see if this is what Jared demonstrates
+Set up `rmse` as the evaluation metric, to tune parameter values based on which one minimizes root-mean-squared error.
 
-(After you have run the parameter tuning once to choose your final parameters, you can set that code to eval = FALSE so that it does not run and slow down your final HTML knitting.)
+```{r q3-1-set-tuning-metrics}
 
-### 3.2
+```
 
-_Explore the model:_ Show a variable importance plot.
+Set up the workflow by updating the workflow from Question 1 to use the new model object for Question 3, but retaining the preprocessing recipe that you prepped for Question 1.
 
-For the top three predictors, write 1-2 sentences each describing the predictor and interpreting the coefficient.
+```{r q-3-1-update-workflow}
 
-### 3.3
+```
 
-_Explore the model:_ Use the `dygraphs` package to plot the training and validation loss (stored in the evaluation_log slot of the model).
+Fit the grid of models on the cross-validation set previously specified on the training data in Question 2.
 
-Write 1-2 sentences explaining what the plot shows.
+```{r q3-1-fit-model-grid}
+
+```
+
+### 3.2: Explore the model
+
+Show the best 5 models by RMSE.
+
+```{r q3-2-show-best-rmse}
+
+```
+
+Finalize the workflow using the best model by RMSE, fit the final model, and extract the resulting `glmnet` model object.
+
+```{r q3-2-finalize-extract}
+
+```
+
+Show a coefficient plot with the coefficients sorted by magnitude.
+
+```{r q3-2-coefplot}
+
+```
+
+Write 2-3 sentences describing whether the best elastic net model is more like a lasso or a ridge regression, and what information you used to arrive at that answer.
+
+**REPLACE ME WITH YOUR EXPLANATION**
 
 ## Question 4
 
-Download the 2015 NFL Play-by-Play data from https://www.jaredlander.com/data/pbp-2015.csv  and fit a logistic regression model to predict whether a given play is a rush or pass play (`PlayType`).
+Read in the 2015 NFL Play-by-Play data from <https://www.jaredlander.com/data/pbp-2015.csv> and fit a model to predict whether a given play is a rush or pass play (`PlayType`).
 
-### 4.1
-
-Prep the data: 
-
-- Filter the data to include plays from just one team
-- Filter the data to include only rows where `PlayType` is either "RUSH" or "PASS". 
-- Convert values of "RUSH" and "PASS" in `PlayType` to 0 and 1 respectively.
-
-Remove the predictor columns `IsRush` and `IsPass` from the recipe, because these columns are collinear with the outcome variable.
-
-```{r}
+```{r q4-0-read-data}
 
 ```
 
+### 4.1: Prep the data
 
-### 4.2
+Filter the data to include plays from just one `OffenseTeam` (of your choice), where `PlayType` is either "RUSH" or "PASS".
 
-Fit the model: Using columns of your choice, create the appropriate X and Y matrices and xgb.DMatrix objects to fit an XGBoost model.  Use a random portion of the data as a validation set for the watchlist. Set appropriate objective and eval_metric arguments based on the data type of the outcome variable, and choose appropriate max_depth, eta and nrounds settings to minimize validation error. Write 1-2 sentences describing other values of max_depth, eta and nrounds that you tested. Using the dials and workflows packages to tune your parameters is optional, and may be helpful. (After you have run the parameter tuning once to choose your final parameters, you can set that code to eval = FALSE so that it does not run and slow down your final HTML knitting.)
+```{r q4-1-filter-data}
 
+```
 
+Split the data into training and testing sets, with 75% of the data in the training set. Stratify the sets by `PlayType` so that the proportions are balanced in both sets.
 
-### 4.3
+```{r q4-1-split-data}
 
-Explore the model: Show a variable importance plot.
+```
 
-For the top three predictors, write 1-2 sentences each describing the predictor and interpreting the coefficient.
+Extract the training and testing data into variables for later use.
 
-### 4.4
+```{r q4-1-extract-train-and-test-data}
 
-Explore the model: Plot the training and validation loss. Write 1-2 sentences explaining what the plot shows.
+```
+
+Prepare a cross-validation spec for the training data with 10 folds, again stratifying each fold by `PlayType`.
+
+```{r q4-1-set-cv}
+
+```
+
+Prepare a model recipe predicting whether `PlayType` is "PASS" or "RUSH" based on the following *specific* predictors:
+
+`Quarter`: Quarter of game (1-4) `Minute`: Minutes remaining in the quarter (15-0) `DefenseTeam`: The opposing team on defense `Down`: 1st, 2nd, 3rd, or 4th `ToGo`: Yards to go to make the down `YardLineFixed`: Starting yard line for that down
+
+After you set the formula, set data preprocessing using `recipes` and `themis` steps:
+
+-   Change `PlayType` from string to factor to prepare for logistic regression
+-   Downsample the data by `PlayType`
+-   Dummy-code all nominal predictors, *not* using one-hot encoding
+
+```{r q4-1-set-recipe}
+
+```
+
+### 4.2: Fit the model
+
+Set up the logistic regression model with `glmnet` as your model engine. Set both the `penalty` and `mixture` parameters to be tuned to run an elastic net regression with the ideal penalty value for model complexity.
+
+```{r q4-2-set-model}
+
+```
+
+Set up a tuning grid to select a regular 10x10 grid of possible parameters.
+
+```{r q4-2-set-tuning-grid}
+
+```
+
+Set up tuning metrics using `mn_log_loss` to evaluate the models based on log-loss (lower is better!).
+
+```{r q4-2-set-tuning-metrics}
+
+```
+
+Prep the workflow.
+
+```{r q-4-2-set-workflow}
+
+```
+
+Fit the grid of models on the cross-validation set specified on the training data.
+
+```{r q4-2-fit-model-grid}
+
+```
+
+Finalize the workflow, selecting the best model based on `mn_log_loss`. Then, use `last_fit()` to fit that workflow's model *on the original train-test split object.* `last_fit()` will fit the model to the training data and then evaluate predictions on the testing data.
+
+```{r q4-2-finalize-model}
+
+```
+
+### 4.3: Explore the model
+
+Extract the `glmnet` model object for the final model and plot a coefficient plot, with the coefficients sorted by magnitude.
+
+```{r q4-3-extract-coefplot}
+
+```
+
+Write 2-3 sentences identifying the 3 strongest predictors (excluding the intercept) and interpreting why those predictors might predict the probability that a play is a RUSH instead of a PASS.
+
+**REPLACE ME WITH YOUR INTERPRETATION**
+
+(The [tidymodels.org example of model tuning](https://www.tidymodels.org/start/tuning/#final-model) will help you with the next few prompts.)
+
+Report the final tested model's rush/pass play classification accuracy using `collect_metrics()`.
+
+```{r q4-3-collect-metrics}
+
+```
+
+In 1-2 sentences, explain whether the model appears to be performing above or below chance, and how you can tell.
+
+**REPLACE ME WITH YOUR EXPLANATION**
+
+Plot an ROC curve of the model's performance on the held-out test data where the `truth` is `PlayType` (which contains the actual rush/pass play type), and where the class probability column is the predicted probability that the play is a PASS based on the model.
+
+```{r q4-3-plot-roc-curve}
+
+```
+
+If you previously identified that the model classifies plays above chance, then this plot should have the ROC curve going *above* the dotted identity line on the graph where sensitivity = 1 - specificity.
